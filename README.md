@@ -16,3 +16,4 @@ python amazon.py
 ```
 Then you can obtain the outputs under the folder './outputs' that contains figures like below:
 ![figure](https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png)
+<img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="figure" width="600">
