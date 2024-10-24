@@ -9,8 +9,8 @@ Download the ILSVRC2012 train and validation dataset and extract those images un
 We use the pre-trained model and their test results located under the folder './results' when comparing different estimators for AURC.
 
 #### Visualize the performance of those AURC estimators
-The following code can be used to evaluate their performance on the ImageNet dataset.
+The following code can be used to evaluate their performance on the Amazon dataset.
 ```bash
 cd evaluate
-python imagenet.py
+python amazon.py
 ```
