@@ -1,5 +1,5 @@
 # Asymptotic AURC
-This is the code for " A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators"[arxiv](https://arxiv.org/pdf/2410.15361).
+This is the code for [A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators](https://arxiv.org/pdf/2410.15361).
 #### Prepare dataset
 * ImageNet (ILSVRC2012)
 This dataset can be found on the official website if you are affiliated with a research organization. It is also available on Academic torrents.
