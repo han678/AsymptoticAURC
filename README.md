@@ -6,7 +6,7 @@ This dataset can be found on the official website if you are affiliated with a r
 Download the ILSVRC2012 train and validation dataset and extract those images under the folder './data/ILSVRC2012'.
 
 * CIFAR10/100 and Amazon (https://github.com/datapythonista/mnist)
-We use the outputs of the pre-trained models located under the folder './results' when comparing different estimators for AURC.
+We directly use the outputs of the pre-trained models on their test set which are located under the folder './results' when comparing different estimators for AURC.
 
 #### Visualize the performance of those AURC estimators
 The following code can be used to evaluate their performance on the Amazon dataset.
