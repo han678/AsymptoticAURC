@@ -97,7 +97,7 @@ def get_full_data_results(model, test_loader, device, score_func_name="softmax")
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', type=str, default='cuda:0')
-    parser.add_argument('--data_dir', type=str, default='/staging/leuven/stg_00081/hzhou/datasets/ILSVRC2012')
+    parser.add_argument('--data_dir', type=str, default='./data/ILSVRC2012')
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--seed', type=int, default=20)
     parser.add_argument('--dataset', type=str, default='imagenet')
