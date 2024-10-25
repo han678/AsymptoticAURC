@@ -35,7 +35,7 @@ def get_mc_AURC(residuals, confidence):
 def get_asy_AURC(residuals, confidence):
     '''
 
-    Compute the asymptotic AURC
+    Compute the asymptotic AURC for infinite samples
 
     Args:
         residuals (list): The residuals of the model predictions.
