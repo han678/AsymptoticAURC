@@ -116,7 +116,7 @@ def get_full_data_results_from_logits(test_loader, criterion, device, score_func
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path_to_trained_models', type=str, default='results/cifar_outputs')
+    parser.add_argument('--path_to_trained_models', type=str, default='results/cifar')
     parser.add_argument('--data_dir', type=str, default='./data')
     parser.add_argument('--device', type=str, default='cuda:0')
     parser.add_argument('--num_workers', type=int, default=4)
