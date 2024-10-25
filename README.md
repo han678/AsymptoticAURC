@@ -1,6 +1,6 @@
-# Asymptotic AURC
+## Asymptotic AURC
 This is the code for "A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators" [[arxiv](https://arxiv.org/pdf/2410.15361)].
-### Key dependencies 
+#### Key dependencies 
 (excluding commonly used packages such as scipy, numpy, torch etc.)
    * python>=3.8
    * timm ([link](https://timm.fast.ai))
