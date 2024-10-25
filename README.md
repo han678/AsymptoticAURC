@@ -5,7 +5,7 @@ This is the code for "A Novel Characterization of the Population Area Under the 
 This dataset can be found on the official website if you are affiliated with a research organization. It is also available on Academic torrents.
 Download the ILSVRC2012 train and validation dataset and extract those images under the folder './data/ILSVRC2012'.
 
-* CIFAR10/100 and Amazon (https://github.com/datapythonista/mnist)
+* CIFAR10/100 and Amazon datasets
 We directly use the outputs of the pre-trained models on their test set which are located under the folder './results' when comparing different estimators for AURC.
 
 #### Visualize the performance of those AURC estimators
