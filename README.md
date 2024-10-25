@@ -16,7 +16,7 @@ To run the code, you will need the following dependencies (excluding common pack
 ### Preparing Datasets and Models
 
 - **ImageNet (ILSVRC2012)**:
-  - The ImageNet dataset can be obtained from the official website if you are affiliated with a research organization. It is also available on [Academic Torrents](https://academictorrents.com/).
+  - The ImageNet dataset can be obtained from the official website if you are affiliated with a research organization. It is also available on Academic Torrents.
   - Download the ILSVRC2012 validation set and extract the images into the `data/ILSVRC2012` folder. This validation set is used to compare the performance of the AURC estimators.
 
 - **CIFAR-10/100 and Amazon Datasets**:
