@@ -45,7 +45,7 @@ After running the script, the results will be saved in the `outputs` folder, whi
   <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/csf/amazon_bert.png" alt="CSF Figure" width="240">
 </div>
 
-These figures help visualize the bias, mean squared error (MSE), and cumulative squared forecast (CSF) for the AURC estimators on the Amazon dataset.
+These figures help visualize the bias, mean squared error (MSE), and different confidence score functions (CSFs) for the AURC estimators on the Amazon dataset.
 
 ### Reference
 If you found this work or code useful, please cite:
