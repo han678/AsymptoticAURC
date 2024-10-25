@@ -73,7 +73,7 @@ def get_score_function(name):
     else:
         raise ValueError(f"Unknown select function: {name}")
 
-class mcmcAURCLoss(_Loss):
+class mcAURCLoss(_Loss):
     __constants__ = ['reduction']
 
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", size_average=None, reduce=None,
