@@ -89,8 +89,7 @@ if __name__ == '__main__':
                 for seed in [5, 10, 21, 42, 84]:
                     results[dataset][f'{model_name}_{seed}'] = {}
                     folder_name = f'{dataset}_{model_name}_250_{seed}_output_{seed}'
-
-                    path_to_root_folder = os.path.join(f'{output_path}/outputs', folder_name)
+                    path_to_root_folder = os.path.join(f'{output_path}/cifar', folder_name)
                     print("Root folder path: ", path_to_root_folder)
                     cache_path = os.path.join(path_to_root_folder, '*', '*', '*cache*')
                     matches = glob.glob(cache_path, recursive=True)
