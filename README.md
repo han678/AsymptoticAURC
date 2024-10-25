@@ -3,7 +3,7 @@ This is the code for "A Novel Characterization of the Population Area Under the 
 ### Key dependencies 
 (excluding commonly used packages such as scipy, numpy, torch etc.)
    * python>=3.8
-   * timm[link[https://timm.fast.ai/]]
+   * timm[https://timm.fast.ai/]
         ```bash
         pip install timm
         ```
