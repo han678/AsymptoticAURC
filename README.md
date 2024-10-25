@@ -47,7 +47,7 @@ After running the script, the results will be saved in the `outputs` folder, whi
 
 These figures help visualize the bias, mean squared error (MSE), and cumulative squared forecast (CSF) for the AURC estimators on the Amazon dataset.
 
-## Reference
+### Reference
 If you found this work or code useful, please cite:
 
 ```
