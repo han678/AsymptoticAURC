@@ -1,12 +1,12 @@
 import numpy as np
 import torch
+import torch.nn.functional as F
 from scipy.special import digamma
 from torch import Tensor
 from torch.nn.modules.loss import _Loss
-import torch.nn.functional as F
-from collections import OrderedDict
 
-def compute_alphas(n, use_diagamma=True):
+
+def compute_mc_alphas(n, use_diagamma=True):
     # alpha for mcmc AURC given finite samples.
     alphas = [0] * n
     if use_diagamma:
@@ -21,8 +21,9 @@ def compute_alphas(n, use_diagamma=True):
             alphas[rank - 1] = cumulative_sum / n
     return alphas
 
+
 def compute_asy_alphas(n):
-    # alphas for asymptotic AURC given infinite samples.
+    # alphas for asymptotic AURC given infinite samples.(used when compute population asy AURC) 
     alphas = [0] * n
     eps = 1e-7
     for rank in range(1, n + 1):
@@ -32,6 +33,7 @@ def compute_asy_alphas(n):
             alpha = -np.log(1 - rank / n) / n
         alphas[rank - 1] = alpha
     return alphas
+
 
 def sele_alphas(n):
     alphas = [0] * n
@@ -53,9 +55,11 @@ def top12_margin(x):
         return values[0] - values[1]
     return values[:, 0] - values[:, 1]
 
+
 def gini_score(x):
     score = -1 + torch.norm(x, dim=1, p=2)**2
     return score
+
 
 def get_score_function(name):
     if name == "MSP":
@@ -73,63 +77,39 @@ def get_score_function(name):
     else:
         raise ValueError(f"Unknown select function: {name}")
 
-class mcAURCLoss(_Loss):
-    __constants__ = ['reduction']
 
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", size_average=None, reduce=None,
-                 reduction: str = 'sum') -> None:
-        super().__init__(size_average, reduce, reduction)
+class BaseAURCLoss(_Loss):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", batch_size=128, reduction='sum', alpha_fn=None):
+        super().__init__(reduction=reduction)
         self.criterion = criterion
         self.criterion.reduction = 'none'
         self.reduction = reduction
         self.score_func = get_score_function(score_function)
+        self.alphas = alpha_fn(batch_size) if alpha_fn is not None else None
 
     def forward(self, input: Tensor, target: Tensor) -> Tensor:
         n = len(target)
-        alphas = compute_alphas(n)
         with torch.no_grad():
             confidence = self.score_func(input)
             indices_sorted = torch.argsort(confidence, descending=False)
             reverse_indices = torch.argsort(indices_sorted)
-            reordered_alphas = torch.tensor(alphas, dtype=input.dtype, device=input.device)[reverse_indices]
+            reordered_alphas = torch.tensor(self.alphas, dtype=input.dtype, device=input.device)[reverse_indices]
 
-        losses = self.criterion(input, target)
-        loss = losses * reordered_alphas
-
-        if self.reduction == 'mean':
-            return torch.mean(loss)
-        elif self.reduction == 'sum':
-            return torch.sum(loss)
-        else:
-            return loss
-
-        
-class SeleLoss(_Loss):
-    __constants__ = ['reduction']
-
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", size_average=None, reduce=None,
-                 reduction: str = 'sum') -> None:
-        super().__init__(size_average, reduce, reduction)
-        self.criterion = criterion
-        self.criterion.reduction = 'none'
-        self.reduction = reduction
-        self.score_func = get_score_function(score_function)
-
-    def forward(self, input: Tensor, target: Tensor) -> Tensor:
-        n = len(target)
-        alphas = sele_alphas(n)
-        with torch.no_grad():
-            confidence = self.score_func(input)
-            indices_sorted = torch.argsort(confidence, descending=False)
-            reverse_indices = torch.argsort(indices_sorted)
-            reordered_alphas = torch.tensor(alphas, dtype=input.dtype, device=input.device)[reverse_indices]
-
-        losses = self.criterion(input, target)
-        loss = losses * reordered_alphas
+        losses = self.criterion(input, target) * reordered_alphas
 
         if self.reduction == 'mean':
-            return torch.mean(loss)
+            return torch.mean(losses)
         elif self.reduction == 'sum':
-            return torch.sum(loss)
+            return torch.sum(losses)
         else:
-            return loss
+            return losses
+
+
+class mcAURCLoss(BaseAURCLoss):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+        super().__init__(criterion, score_function, batch_size, reduction, compute_mc_alphas)
+
+
+class SeleLoss(BaseAURCLoss):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+        super().__init__(criterion, score_function, batch_size, reduction, sele_alphas)
