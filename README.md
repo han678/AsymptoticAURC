@@ -1,31 +1,45 @@
 ## Asymptotic AURC
-This is the code for "A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators" [[arxiv](https://arxiv.org/pdf/2410.15361)].
-#### Key dependencies 
-(excluding commonly used packages such as scipy, numpy, torch etc.)
-   * python>=3.8
-   * timm ([link](https://timm.fast.ai))
-        ```bash
-        pip install timm
-        ```
-#### Prepare dataset
-* ImageNet (ILSVRC2012).
-This dataset can be found on the official website if you are affiliated with a research organization. It is also available on Academic torrents.
-Download the ILSVRC2012 train and validation sets and extract those images under the folder `data/ILSVRC2012`.
 
-* CIFAR10/100 and Amazon datasets.
-We directly use the outputs of the pre-trained models on their test set which are located under the folder `results` when comparing different estimators for AURC. For the CIFAR10/100 dataset, the pre-trained models can be downloaded via [Zenodo](https://zenodo.org/records/10724791). Make sure place them in `result/cifar`.
+This repository contains the code for the paper **"A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators"** [[arxiv](https://arxiv.org/pdf/2410.15361)].
 
+### Key Dependencies
+The following dependencies are required to run the code (excluding common packages like `scipy`, `numpy`, and `torch`):
 
+- **Python** ≥ 3.8
+- **timm**: A library for PyTorch models ([link](https://timm.fast.ai))
+  
+  Install via pip:
+  ```bash
+  pip install timm
+  ```
 
-##### Visualize the performance of those AURC estimators
-The following code can be used to evaluate their performance on the Amazon dataset.
+### Preparing Datasets and Models
+
+- **ImageNet (ILSVRC2012)**:
+  - The ImageNet dataset can be obtained from the official website for those affiliated with a research organization. It is also available on Academic Torrents.
+  - Download the ILSVRC2012 validation set and extract the images into the `data/ILSVRC2012` folder. This validation set is used to compare the performance of the AURC estimators.
+
+- **CIFAR-10/100 and Amazon Datasets**:
+  - For the CIFAR-10/100 and Amazon datasets, we use the outputs of pre-trained models on their respective test sets, which are located in the `results` folder for comparison across different AURC estimators.
+  - Pre-trained models for CIFAR-10/100 can be downloaded from [Zenodo](https://zenodo.org/records/10724791). Place the downloaded files in the `result/cifar` folder.
+  - The outputs of the pre-trained models for the Amazon dataset can be found in the `result/Amazon` folder.
+
+### Visualizing the Performance of AURC Estimators
+
+To evaluate the performance of AURC estimators on the Amazon dataset, use the following commands:
+
 ```bash
 cd evaluate
 python amazon.py
 ```
-Then you can obtain the outputs under the folder `outputs` that contains figures like below:
+
+After running the script, the results will be saved in the `outputs` folder, which contains figures visualizing the estimator performance, as shown below:
+
 <div style="display: flex; justify-content: space-between;">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="figure" width="260">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/mse/amazon_bert.png" alt="figure" width="260">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/csf/amazon_bert.png" alt="figure" width="240">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="Bias Figure" width="260">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/mse/amazon_bert.png" alt="MSE Figure" width="260">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/csf/amazon_bert.png" alt="CSF Figure" width="240">
 </div>
+
+These figures help visualize the bias, mean squared error (MSE), and cumulative squared forecast (CSF) for the AURC estimators on the Amazon dataset.
+
