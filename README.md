@@ -10,18 +10,20 @@ This is the code for "A Novel Characterization of the Population Area Under the 
 #### Prepare dataset
 * ImageNet (ILSVRC2012).
 This dataset can be found on the official website if you are affiliated with a research organization. It is also available on Academic torrents.
-Download the ILSVRC2012 train and validation sets and extract those images under the folder './data/ILSVRC2012'.
+Download the ILSVRC2012 train and validation sets and extract those images under the folder `data/ILSVRC2012`.
 
 * CIFAR10/100 and Amazon datasets.
-We directly use the outputs of the pre-trained models on their test set which are located under the folder './results' when comparing different estimators for AURC.
+We directly use the outputs of the pre-trained models on their test set which are located under the folder `results` when comparing different estimators for AURC. For the CIFAR10/100 dataset, the pre-trained models can be downloaded via [Zenodo](https://zenodo.org/records/10724791). Make sure place them in `result/cifar`.
 
-#### Visualize the performance of those AURC estimators
+
+
+##### Visualize the performance of those AURC estimators
 The following code can be used to evaluate their performance on the Amazon dataset.
 ```bash
 cd evaluate
 python amazon.py
 ```
-Then you can obtain the outputs under the folder './outputs' that contains figures like below:
+Then you can obtain the outputs under the folder `outputs` that contains figures like below:
 <div style="display: flex; justify-content: space-between;">
   <img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="figure" width="260">
   <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/mse/amazon_bert.png" alt="figure" width="260">
