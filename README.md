@@ -24,11 +24,11 @@ To run the code, you will need the following dependencies (excluding common pack
   - Pre-trained models for CIFAR-10/100 can be downloaded from [Zenodo](https://zenodo.org/records/10724791). Place the downloaded files in the `results/cifar` folder.
   - The outputs of the pre-trained models for the Amazon dataset can be found in the `results/Amazon` folder.
 
-#### Using the AURC Estimator in your project
+#### Using the AURC estimator in your project
 
 To evaluate AURC using our estimator, you can copy the file `utils/estimators.py` into your repository. If you want to use it as a loss function, you can copy the file `utils/loss.py` into your repository.
 
-#### Visualizing the Performance of AURC Estimators
+#### Visualizing the performance of AURC estimators
 
 To evaluate the performance of AURC estimators on the Amazon dataset, use the following commands:
 
