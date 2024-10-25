@@ -47,6 +47,17 @@ After running the script, the results will be saved in the `outputs` folder, whi
 
 These figures help visualize the bias, mean squared error (MSE), and cumulative squared forecast (CSF) for the AURC estimators on the Amazon dataset.
 
+## Reference
+If you found this work or code useful, please cite:
+
+```
+@article{zhou2024novel,
+  title={A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators},
+  author={Zhou, Han and Van Landeghem, Jordy and Popordanoska, Teodora and Blaschko, Matthew B},
+  journal={arXiv preprint arXiv:2410.15361},
+  year={2024}
+}
+```
 ### License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
