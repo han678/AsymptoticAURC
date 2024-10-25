@@ -20,9 +20,9 @@ The following dependencies are required to run the code (excluding common packag
   - Download the ILSVRC2012 validation set and extract the images into the `data/ILSVRC2012` folder. This validation set is used to compare the performance of the AURC estimators.
 
 - **CIFAR-10/100 and Amazon Datasets**:
-  - For the CIFAR-10/100 and Amazon datasets, we use the outputs of pre-trained models on their respective test sets, which are located in the `results` folder for comparison across different AURC estimators.
-  - Pre-trained models for CIFAR-10/100 can be downloaded from [Zenodo](https://zenodo.org/records/10724791). Place the downloaded files in the `result/cifar` folder.
-  - The outputs of the pre-trained models for the Amazon dataset can be found in the `result/Amazon` folder.
+  - For the CIFAR-10/100 and Amazon datasets, we use the outputs of pre-trained models on their test sets, which are located in the `results` folder for comparison across different AURC estimators.
+  - Pre-trained models for CIFAR-10/100 can be downloaded from [Zenodo](https://zenodo.org/records/10724791). Place the downloaded files in the `results/cifar` folder.
+  - The outputs of the pre-trained models for the Amazon dataset can be found in the `results/Amazon` folder.
 
 ### Visualizing the Performance of AURC Estimators
 
@@ -43,3 +43,6 @@ After running the script, the results will be saved in the `outputs` folder, whi
 
 These figures help visualize the bias, mean squared error (MSE), and cumulative squared forecast (CSF) for the AURC estimators on the Amazon dataset.
 
+### License
+
+Everything is licensed under the [MIT License](https://opensource.org/licenses/MIT).
