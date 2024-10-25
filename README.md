@@ -3,11 +3,11 @@
 This repository contains the code for the paper **"A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators"** [[arxiv](https://arxiv.org/pdf/2410.15361)].
 
 ### Key Dependencies
-The following dependencies are required to run the code (excluding common packages like `scipy`, `numpy`, and `torch`):
+To run the code, you will need the following dependencies (excluding common packages like `scipy`, `numpy`, and `torch`):
 
 - **Python** ≥ 3.8
-- **timm**: A library for PyTorch models that are pre-trained on ImageNet dataset ([link](https://timm.fast.ai))
-  
+- **timm**: A library for PyTorch models pre-trained on the ImageNet dataset. [Learn more here](https://timm.fast.ai).
+
   Install via pip:
   ```bash
   pip install timm
@@ -16,7 +16,7 @@ The following dependencies are required to run the code (excluding common packag
 ### Preparing Datasets and Models
 
 - **ImageNet (ILSVRC2012)**:
-  - The ImageNet dataset can be obtained from the official website for those affiliated with a research organization. It is also available on Academic Torrents.
+  - The ImageNet dataset can be obtained from the official website if you are affiliated with a research organization. It is also available on [Academic Torrents](https://academictorrents.com/).
   - Download the ILSVRC2012 validation set and extract the images into the `data/ILSVRC2012` folder. This validation set is used to compare the performance of the AURC estimators.
 
 - **CIFAR-10/100 and Amazon Datasets**:
@@ -24,9 +24,9 @@ The following dependencies are required to run the code (excluding common packag
   - Pre-trained models for CIFAR-10/100 can be downloaded from [Zenodo](https://zenodo.org/records/10724791). Place the downloaded files in the `results/cifar` folder.
   - The outputs of the pre-trained models for the Amazon dataset can be found in the `results/Amazon` folder.
 
-## To use it in your project
+### Using the AURC Estimator in Your Project
 
-To evaluate AURC using our estimator, you can copy the file `utils/estimators.py` in your repo. If you want to use it as a loss function, you can copy the file `utils/loss.py` in your repo.
+To evaluate AURC using our estimator, you can copy the file `utils/estimators.py` into your repository. If you want to use it as a loss function, you can copy the file `utils/loss.py` into your repository.
 
 ### Visualizing the Performance of AURC Estimators
 
@@ -49,4 +49,4 @@ These figures help visualize the bias, mean squared error (MSE), and cumulative 
 
 ### License
 
-Everything is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
