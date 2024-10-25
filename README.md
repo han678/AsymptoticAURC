@@ -6,7 +6,7 @@ This repository contains the code for the paper **"A Novel Characterization of t
 The following dependencies are required to run the code (excluding common packages like `scipy`, `numpy`, and `torch`):
 
 - **Python** ≥ 3.8
-- **timm**: A library for PyTorch models ([link](https://timm.fast.ai))
+- **timm**: A library for PyTorch models that are pre-trained on ImageNet dataset ([link](https://timm.fast.ai))
   
   Install via pip:
   ```bash
