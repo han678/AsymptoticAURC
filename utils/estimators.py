@@ -6,7 +6,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 
-from utils.loss import compute_asy_alphas, compute_alphas, sele_alphas
+from utils.loss import compute_asy_alphas, compute_mc_alphas, sele_alphas
 
 __all__ = ["get_geifman_AURC", "get_mc_AURC", "get_sele_score", "get_asy_AURC"]
 
@@ -28,7 +28,7 @@ def get_mc_AURC(residuals, confidence):
     m = len(residuals)
     idx_sorted = np.argsort(confidence)
     temp1 = residuals[idx_sorted]
-    alphas = compute_alphas(n=m)
+    alphas = compute_mc_alphas(n=m)
     asy_AURC = sum(np.array(temp1) *alphas)
     return asy_AURC
 
