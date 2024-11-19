@@ -3,6 +3,8 @@ import sys
 
 import torch
 
+__all__ = ['PreResNet20', 'PreResNet20Drop', 'PreResNet56', 'PreResNet56Drop', 'PreResNet110', 'PreResNet110Drop', 'PreResNet164', 'PreResNet164Drop', 'PreResNet']
+
 def get_network(args):
     """ return given network
     """
@@ -50,6 +52,30 @@ def get_network(args):
     elif args.arch == 'wrn':
         from models.wrn import WideResNet28x10
         net = WideResNet28x10(num_classes=num_classes)
+    elif args.arch == 'preresnet20':    
+        from models.preresnet import PreResNet20
+        net = PreResNet20(num_classes=num_classes)
+    elif args.arch == 'preresnet20drop':
+        from models.preresnet import PreResNet20Drop
+        net = PreResNet20Drop(num_classes=num_classes)
+    elif args.arch == 'preresnet56':
+        from models.preresnet import PreResNet56
+        net = PreResNet56(num_classes=num_classes)
+    elif args.arch == 'preresnet56drop':
+        from models.preresnet import PreResNet56Drop
+        net = PreResNet56Drop(num_classes=num_classes)
+    elif args.arch == 'preresnet110':
+        from models.preresnet import PreResNet110
+        net = PreResNet110(num_classes=num_classes)
+    elif args.arch == 'preresnet110drop':
+        from models.preresnet import PreResNet110Drop
+        net = PreResNet110Drop(num_classes=num_classes)
+    elif args.arch == 'preresnet164':
+        from models.preresnet import PreResNet164
+        net = PreResNet164(num_classes=num_classes)
+    elif args.arch == 'preresnet164drop':
+        from models.preresnet import PreResNet164Drop
+        net = PreResNet164Drop(num_classes=num_classes)
     else:
         print('the network name you have entered is not supported yet')
         sys.exit()
