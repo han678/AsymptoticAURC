@@ -1,37 +1,35 @@
 import os
 import sys
 
-import torch
-
 def get_network(args):
     """ return given network
     """
         # Determine number of classes and input size based on the dataset
     num_classes = {'cifar10': 10, 'cifar100': 100, 'svhn': 10, 'imagenet':1000}.get(args.dataset, 10)
-    if args.arch == 'vgg16_bn':
-        from models.vgg import vgg16_bn
-        net = vgg16_bn(num_classes=num_classes)
-    elif args.arch == 'vgg13_bn':
-        from models.vgg import vgg13_bn
-        net = vgg13_bn(num_classes=num_classes)
-    elif args.arch == 'vgg11_bn':
-        from models.vgg import vgg11_bn
-        net = vgg11_bn(num_classes=num_classes)
-    elif args.arch == 'vgg19_bn':
-        from models.vgg import vgg19_bn
-        net = vgg19_bn(num_classes=num_classes)
-    elif args.arch == 'vgg11':
-        from models.vgg import vgg11
-        net = vgg11(num_classes=num_classes)
-    elif args.arch == 'vgg13':
-        from models.vgg import vgg13
-        net = vgg13(num_classes=num_classes)
-    elif args.arch == 'vgg16':
-        from models.vgg import vgg16
-        net = vgg16(num_classes=num_classes)
-    elif args.arch == 'vgg19':
-        from models.vgg import vgg19
-        net = vgg19(num_classes=num_classes)
+    if args.arch == 'VGG16BN':
+        from models.vgg import VGG16BN
+        net = VGG16BN(num_classes=num_classes)
+    elif args.arch == 'VGG16':
+        from models.vgg import VGG16
+        net = VGG16(num_classes=num_classes)
+    elif args.arch == 'VGG16Drop':
+        from models.vgg import VGG16Drop
+        net = VGG16Drop(num_classes=num_classes)
+    elif args.arch == 'VGG16BNDrop':
+        from models.vgg import VGG16BNDrop
+        net = VGG16BNDrop(num_classes=num_classes)
+    elif args.arch == 'VGG19BN':
+        from models.vgg import VGG19BN
+        net = VGG19BN(num_classes=num_classes)
+    elif args.arch == 'VGG19':
+        from models.vgg import VGG19
+        net = VGG19(num_classes=num_classes)
+    elif args.arch == 'VGG19Drop':
+        from models.vgg import VGG19Drop
+        net = VGG19Drop(num_classes=num_classes)
+    elif args.arch == 'VGG19BNDrop':
+        from models.vgg import VGG19BNDrop
+        net = VGG19BNDrop(num_classes=num_classes)
     elif args.arch == 'resnet18':
         from models.resnet import resnet18
         net = resnet18(num_classes=num_classes)

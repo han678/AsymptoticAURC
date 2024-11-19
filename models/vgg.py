@@ -7,7 +7,7 @@ import math
 
 import torch.nn as nn
 
-__all__ = ["VGG16Drop", "VGG16BNDrop", "VGG16", "VGG16BN"]
+__all__ = ["VGG16Drop", "VGG16BNDrop", "VGG16", "VGG16BN", "VGG19Drop", "VGG19BNDrop", "VGG19", "VGG19BN"]
 
 
 def make_layers(cfg, batch_norm=False, dropout_rate=0.0):
@@ -158,3 +158,43 @@ class VGG16BNDrop(VGGDrop):
             dropout_rate=0.05,
             dropout_rate_fc=0.05,
         )
+
+class VGG19(VGGDrop):
+    def __init__(self, num_classes=10):
+        super(VGG19, self).__init__(
+            num_classes=num_classes,
+            depth=19,
+            batch_norm=False,
+            dropout_rate=0,
+            dropout_rate_fc=0.5,
+        )
+
+class VGG19BN(VGGDrop):
+    def __init__(self, num_classes=10):
+        super(VGG19BN, self).__init__(
+            num_classes=num_classes,
+            depth=19,
+            batch_norm=True,
+            dropout_rate=0,
+            dropout_rate_fc=0.5,
+        )
+
+class VGG19Drop(VGGDrop):
+    def __init__(self, num_classes=10):
+        super(VGG19Drop, self).__init__(
+            num_classes=num_classes,
+            depth=19,
+            batch_norm=False,
+            dropout_rate=0.05,
+            dropout_rate_fc=0.05,
+        )   
+
+class VGG19BNDrop(VGGDrop):
+    def __init__(self, num_classes=10):
+        super(VGG19BNDrop, self).__init__(
+            num_classes=num_classes,
+            depth=19,
+            batch_norm=True,
+            dropout_rate=0.05,
+            dropout_rate_fc=0.05,
+        )   
