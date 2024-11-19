@@ -3,8 +3,6 @@ import sys
 
 import torch
 
-__all__ = ['PreResNet20', 'PreResNet20Drop', 'PreResNet56', 'PreResNet56Drop', 'PreResNet110', 'PreResNet110Drop', 'PreResNet164', 'PreResNet164Drop', 'PreResNet']
-
 def get_network(args):
     """ return given network
     """
