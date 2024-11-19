@@ -48,28 +48,28 @@ def get_network(args):
     elif args.arch == 'wrn':
         from models.wrn import WideResNet28x10
         net = WideResNet28x10(num_classes=num_classes)
-    elif args.arch == 'preresnet20':    
+    elif args.arch == 'PreResNet20':    
         from models.preresnet import PreResNet20
         net = PreResNet20(num_classes=num_classes)
-    elif args.arch == 'preresnet20drop':
+    elif args.arch == 'PreResNet20Drop':
         from models.preresnet import PreResNet20Drop
         net = PreResNet20Drop(num_classes=num_classes)
-    elif args.arch == 'preresnet56':
+    elif args.arch == 'PreResNet56':
         from models.preresnet import PreResNet56
         net = PreResNet56(num_classes=num_classes)
-    elif args.arch == 'preresnet56drop':
+    elif args.arch == 'PreResNet56drop':
         from models.preresnet import PreResNet56Drop
         net = PreResNet56Drop(num_classes=num_classes)
-    elif args.arch == 'preresnet110':
+    elif args.arch == 'PreResNet110':
         from models.preresnet import PreResNet110
         net = PreResNet110(num_classes=num_classes)
-    elif args.arch == 'preresnet110drop':
+    elif args.arch == 'PreResNet110drop':
         from models.preresnet import PreResNet110Drop
         net = PreResNet110Drop(num_classes=num_classes)
-    elif args.arch == 'preresnet164':
+    elif args.arch == 'PreResNet164':
         from models.preresnet import PreResNet164
         net = PreResNet164(num_classes=num_classes)
-    elif args.arch == 'preresnet164drop':
+    elif args.arch == 'PreResNet164drop':
         from models.preresnet import PreResNet164Drop
         net = PreResNet164Drop(num_classes=num_classes)
     else:
