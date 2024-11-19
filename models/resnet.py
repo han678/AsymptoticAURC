@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn as nn
 import math
-__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
+__all__ = ['PreResNet20', 'PreResNet20Drop', 'PreResNet56', 'PreResNet56Drop', 'PreResNet110', 'PreResNet110Drop', 'PreResNet164', 'PreResNet164Drop', 'PreResNet']
 
 
 def conv3x3(in_planes, out_planes, stride=1):
