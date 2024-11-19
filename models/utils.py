@@ -50,12 +50,6 @@ def get_network(args):
     elif args.arch == 'wrn':
         from models.wrn import WideResNet28x10
         net = WideResNet28x10(num_classes=num_classes)
-    elif args.arch == 'mobilenet_small':
-        from models.mobilenet import MobileNetV3
-        net = MobileNetV3(n_class=num_classes, mode='small')
-    elif args.arch == 'mobilenet_large':
-        from models.mobilenet import mobilenetv3
-        net = mobilenetv3(n_class=num_classes, mode='large')
     else:
         print('the network name you have entered is not supported yet')
         sys.exit()
