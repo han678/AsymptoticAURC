@@ -88,7 +88,6 @@ class BaseAURCLoss(_Loss):
         self.alphas = alpha_fn(batch_size) if alpha_fn is not None else None
 
     def forward(self, input: Tensor, target: Tensor) -> Tensor:
-        n = len(target)
         with torch.no_grad():
             confidence = self.score_func(input)
             indices_sorted = torch.argsort(confidence, descending=False)
