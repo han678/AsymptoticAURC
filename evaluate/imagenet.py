@@ -150,7 +150,7 @@ if __name__ == '__main__':
         batch_size = 128
         for score_function_name in score_function_names:
             results[score_function_name] = {}
-            loader = prepare_dataset(args.dataset, batch_size=batch_size, load_train=False, num_workers=4) 
+            loader = prepare_dataset(args.dataset, batch_size=batch_size, load_train=False, num_workers=4, data_dir=args.data_dir) 
             batch_sample_results = get_batch_sample_results(model, loader, device, score_func_name=score_function_name, return_all=True)
             results[score_function_name].update(batch_sample_results)
             full_data_results = get_full_data_results(model, loader, device, score_func_name=score_function_name)
