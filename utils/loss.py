@@ -45,7 +45,7 @@ def sele_alphas(n):
 
 def entropy(x):
     logits = F.softmax(x, dim=1)
-    return torch.sum(torch.log(logits) * logits, dim=1) 
+    return -torch.sum(torch.log(logits) * logits, dim=1) 
 
 
 def top12_margin(x):
@@ -57,7 +57,7 @@ def top12_margin(x):
 
 
 def gini_score(x):
-    score = -1 + torch.norm(x, dim=1, p=2)**2
+    score = 1 - torch.norm(x, dim=1, p=2)**2
     return score
 
 
@@ -71,7 +71,7 @@ def get_score_function(name):
     elif name == "MaxLogit":
         return lambda x: torch.max(x, dim=1).values
     elif name == "l2_norm":
-        return lambda x: -torch.norm(F.softmax(x, dim=1), dim=1, p=2)
+        return lambda x: torch.norm(F.softmax(x, dim=1), dim=1, p=2)
     elif name == "NegGiniScore":
         return lambda x: -gini_score(F.softmax(x, dim=1))
     else:
