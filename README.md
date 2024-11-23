@@ -40,8 +40,8 @@ python amazon.py
 After running the script, the results will be saved in the `outputs` folder, which contains figures visualizing the estimator performance, as shown below:
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="Bias Figure" width="260">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/mse/amazon_bert.png" alt="MSE Figure" width="260">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/c78db47a506fc9db5fbdcddd08f4b593c48c6a60/outputs/bias/amazon_bert.png" alt="Bias Figure" width="250">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/mse/amazon_bert.png" alt="MSE Figure" width="250">
   <img src="https://github.com/han678/AsymptoticAURC/blob/0071990151584e99ad818bd4961d27e9a49e78af/outputs/csf/amazon_bert.png" alt="CSF Figure" width="240">
 </div>
 
