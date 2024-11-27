@@ -23,9 +23,10 @@ def calculate_mean_variance(data):
 def zero_one_loss(predictions, targets):
     return np.argmax(predictions, 1) != np.argmax(targets, 1)
 
-def cross_entropy_loss(logits, targets):
+def cross_entropy_loss(probs, targets, epsilon=1e-12):
     """Compute cross-entropy loss between prediction probabilities and targets."""
-    ce_loss = -np.sum(targets * np.log(logits), axis=1) 
+    probs = np.clip(probs, epsilon, 1. - epsilon)  # Clip to avoid log(0)
+    ce_loss = -np.sum(targets * np.log(probs), axis=1)
     return ce_loss
 
 def get_logits_and_labels(preds_dict, logits_key, labels_key):
