@@ -39,7 +39,7 @@ if __name__ == '__main__':
     results = {}
     for model_name in model_names:
         results[model_name] = {}
-        dist_mc_aurc, dist_sele, dist_2sele, dist_geifman_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(7))
+        dist_mc_aurc, dist_sele, dist_2sele, dist_e_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(7))
         folder_name = f'amazon_{model_name}'
         path_to_root_folder = os.path.join(path, folder_name)
         print("Root folder path: ", path_to_root_folder)
