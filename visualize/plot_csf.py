@@ -25,7 +25,7 @@ def get_score_name(score_func_name):
 
 def plot_csf(data_dict, score_function_names, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_asy_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_asy_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
