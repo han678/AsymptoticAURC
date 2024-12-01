@@ -8,9 +8,9 @@ import numpy as np
 
 from utils.loss import compute_asy_alphas, compute_mc_alphas, sele_alphas
 
-__all__ = ["get_geifman_AURC", "get_mc_AURC", "get_sele_score", "get_asy_AURC"]
+__all__ = ["get_EAURC", "get_mc_AURC", "get_sele_score", "get_asy_AURC"]
 
-def get_geifman_AURC(residuals):
+def get_EAURC(residuals, confidence):
     '''
     An approximation for AURC proposed by Geifman (only valid for 0/1 loss)
 
@@ -19,10 +19,23 @@ def get_geifman_AURC(residuals):
 
     Returns:
         float: The AURC approximation.      
-    '''     
-    err = np.mean(residuals) 
+    '''  
+        curve = []
+    m = len(residuals)
+    idx_sorted = np.argsort(confidence)
+    temp1 = residuals[idx_sorted]
+    cov = len(temp1)
+    acc = sum(temp1)
+    curve.append((cov/ m, acc / len(temp1)))
+    for i in range(0, len(idx_sorted)-1):
+        cov = cov-1
+        acc = acc-residuals[idx_sorted[i]]
+        curve.append((cov / m, acc /(m-i)))
+    AUC = sum([a[1] for a in curve])/len(curve)
+    err = np.mean(residuals)
     kappa_star_aurc = err + (1 - err) * (np.log(1 - err))
-    return kappa_star_aurc
+    EAURC = AUC-kappa_star_aurc
+    return EAURC
 
 def get_mc_AURC(residuals, confidence):
     m = len(residuals)
