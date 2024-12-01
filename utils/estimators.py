@@ -18,7 +18,7 @@ def get_EAURC(residuals, confidence):
         residuals (list): The residuals of the model predictions.
 
     Returns:
-        float: The AURC approximation.      
+        float: The EAURC.      
     '''  
         curve = []
     m = len(residuals)
