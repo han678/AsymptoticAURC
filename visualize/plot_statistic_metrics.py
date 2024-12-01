@@ -7,8 +7,8 @@ def get_label(metric_name):
         return "Ours"
     elif "sele" in metric_name and "2sele" not in metric_name:
         return "SELE"
-    elif "geifman" in metric_name:
-        return "Geifman et al."
+    elif "e_aurc" in metric_name:
+        return "E-AURC"
     elif "true" in metric_name:
         return r"$AURC_p$"
     elif "asy" in metric_name:
@@ -20,7 +20,7 @@ def get_label(metric_name):
 
 def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -53,7 +53,7 @@ def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
 
 def plot_bias(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -81,7 +81,7 @@ def plot_bias(data_dict, batch_size_list, figs_path):
 
 def plot_mse(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -103,7 +103,7 @@ def plot_mse(data_dict, batch_size_list, figs_path):
 
 def plot_var(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -125,7 +125,7 @@ def plot_var(data_dict, batch_size_list, figs_path):
 
 def plot_mae(all_seed_results, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele'] #['asy_aurc', 'sele', '2sele']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', 'geifman_aurc'] #['01_asy_aurc', '01_sele', '01_2sele', 'geifman_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', 'e_aurc'] #['01_asy_aurc', '01_sele', '01_2sele', 'e_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2',  'C4', 'C1', 'magenta', 'yellow', 'black'] 
