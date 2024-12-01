@@ -16,7 +16,7 @@ from utils.estimators import get_asy_AURC, get_EAURC, get_mc_AURC, get_sele_scor
 
 def get_batch_sample_results(model, test_loader, device, score_func_name="softmax", return_all=False):
     """Load and evaluate the batch sample results for ImageNet dataset."""
-    all_mc_aurc, all_sele, all_geifman_aurc, all_01_mc_aurc, all_01_sele = [], [], [], [], []
+    all_mc_aurc, all_sele, all_e_aurc, all_01_mc_aurc, all_01_sele = [], [], [], [], []
     EPS = 1e-7
     results= {}
     score_func = get_score_function(score_func_name)
@@ -29,21 +29,21 @@ def get_batch_sample_results(model, test_loader, device, score_func_name="softma
             targets = F.one_hot(targets, num_classes=logits.shape[1]).to(device).cpu().numpy()
             loss1 = zero_one_loss(scores, targets)
             loss2 = cross_entropy_loss(scores, targets)
-            geifman_aurc = get_geifman_AURC(residuals=loss1)
+            e_aurc = get_e_AURC(residuals=loss1, confidence=confidences)
             mc_aurc_01 = get_mc_AURC(residuals=loss1, confidence=confidences)
             sele_01 = get_sele_score(residuals=loss1, confidence=confidences)
             mc_aurc = get_mc_AURC(residuals=loss2, confidence=confidences)
             sele = get_sele_score(residuals=loss2, confidence=confidences)
             all_mc_aurc.append(mc_aurc)
             all_sele.append(sele)
-            all_geifman_aurc.append(geifman_aurc)
+            all_e_aurc.append(e_aurc)
             all_01_mc_aurc.append(mc_aurc_01)
             all_01_sele.append(sele_01)
     if not return_all:
         results["mc_aurc"] = calculate_mean_variance(all_mc_aurc)
         results["sele"] = calculate_mean_variance(all_sele)
         results["2sele"] = calculate_mean_variance([x * 2 for x in all_sele])
-        results["geifman_aurc"] = calculate_mean_variance(all_geifman_aurc)
+        results["e_aurc"] = calculate_mean_variance(all_e_aurc)
         results["01_mc_aurc"] = calculate_mean_variance(all_01_mc_aurc)
         results["01_sele"] = calculate_mean_variance(all_01_sele)
         results["01_2sele"] = calculate_mean_variance([x * 2 for x in all_01_sele])
@@ -51,7 +51,7 @@ def get_batch_sample_results(model, test_loader, device, score_func_name="softma
         results["mc_aurc"] = all_mc_aurc
         results["sele"] = all_sele
         results["2sele"] = [x * 2 for x in all_sele]
-        results["geifman_aurc"] = all_geifman_aurc
+        results["e_aurc"] = all_e_aurc
         results["01_mc_aurc"] = all_01_mc_aurc
         results["01_sele"] = all_01_sele
         results["01_2sele"] = [x * 2 for x in all_01_sele]
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     subdirs = ['estimator', 'mse', 'bias', 'csf']
     for subdir in subdirs:
         os.makedirs(os.path.join(output_path, subdir), exist_ok=True)
-    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     results = {}
     batch_size_list = [16, 32, 64, 128, 256, 512, 1024]
     
