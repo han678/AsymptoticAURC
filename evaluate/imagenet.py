@@ -12,7 +12,7 @@ from visualize import plot_csf
 from visualize.plot_statistic_metrics import plot_aurc_metrics, plot_bias, plot_mse
 import torch.nn.functional as F
 from utils.loss import get_score_function
-from utils.estimators import get_asy_AURC, get_geifman_AURC, get_mc_AURC, get_sele_score
+from utils.estimators import get_asy_AURC, get_EAURC, get_mc_AURC, get_sele_score
 
 def get_batch_sample_results(model, test_loader, device, score_func_name="softmax", return_all=False):
     """Load and evaluate the batch sample results for ImageNet dataset."""
