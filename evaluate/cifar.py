@@ -51,7 +51,7 @@ def get_batch_sample_results_from_logits(test_loader, device, score_func_name="M
         confidences = score_func(logits).cpu().numpy()
         loss1 = zero_one_loss(scores, targets)
         loss2 = cross_entropy_loss(scores, targets)
-        e_aurc = get_EAURC(residuals=loss1)
+        e_aurc = get_EAURC(residuals=loss1, confidence=confidences)
         mc_aurc_01 = get_mc_AURC(residuals=loss1, confidence=confidences)
         sele_01 = get_sele_score(residuals=loss1, confidence=confidences)
         mc_aurc = get_mc_AURC(residuals=loss2, confidence=confidences)
@@ -65,7 +65,7 @@ def get_batch_sample_results_from_logits(test_loader, device, score_func_name="M
         results["mc_aurc"] = calculate_mean_variance(all_mc_aurc)
         results["sele"] = calculate_mean_variance(all_sele)
         results["2sele"] = calculate_mean_variance([x * 2 for x in all_sele])
-        results["e_aurc"] = calculate_mean_variance(all_geifman_aurc)
+        results["e_aurc"] = calculate_mean_variance(all_e_aurc)
         results["01_mc_aurc"] = calculate_mean_variance(all_01_mc_aurc)
         results["01_sele"] = calculate_mean_variance(all_01_sele)
         results["01_2sele"] = calculate_mean_variance([x * 2 for x in all_01_sele])
@@ -73,7 +73,7 @@ def get_batch_sample_results_from_logits(test_loader, device, score_func_name="M
         results["mc_aurc"] = all_mc_aurc
         results["sele"] = all_sele
         results["2sele"] = [x * 2 for x in all_sele]
-        results["e_aurc"] = all_geifman_aurc
+        results["e_aurc"] = all_e_aurc
         results["01_mc_aurc"] = all_01_mc_aurc
         results["01_sele"] = all_01_sele
         results["01_2sele"] = [x * 2 for x in all_01_sele]
@@ -148,7 +148,7 @@ if __name__ == '__main__':
         results = {}
         for model_name in model_names: 
             results[model_name] = {}
-            dist_mc_aurc, dist_sele, dist_2sele, dist_geifman_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(7))
+            dist_mc_aurc, dist_sele, dist_2sele, dist_e_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(7))
             for seed in seeds:
                 results[model_name][str(seed)] = {}
                 folder_name = f'{dataset}_{model_name}_250_{seed}_output_{seed}'
@@ -188,17 +188,17 @@ if __name__ == '__main__':
 
             # Calculate mean and variance of the abs(bias) terms across different models
             for batch_size in batch_size_list:
-                dist_mc_aurc[str(batch_size)], dist_sele[str(batch_size)], dist_2sele[str(batch_size)], dist_geifman_aurc[str(batch_size)], dist_01_mc_aurc[str(batch_size)], dist_01_sele[str(batch_size)], dist_01_2sele[str(batch_size)] = ([] for _ in range(7))
+                dist_mc_aurc[str(batch_size)], dist_sele[str(batch_size)], dist_2sele[str(batch_size)], dist_e_aurc[str(batch_size)], dist_01_mc_aurc[str(batch_size)], dist_01_sele[str(batch_size)], dist_01_2sele[str(batch_size)] = ([] for _ in range(7))
                 for seed in seeds:
                     dist_mc_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["mc_aurc"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
                     dist_sele[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["sele"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
                     dist_2sele[str(batch_size)].append(abs(2 * results[model_name][str(seed)][str(batch_size)]["sele"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
-                    dist_geifman_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["geifman_aurc"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
+                    dist_e_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["e_aurc"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_mc_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["01_mc_aurc"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_sele[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["01_sele"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_2sele[str(batch_size)].append(abs(2 * results[model_name][str(seed)][str(batch_size)]["01_sele"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
             all_seed_results = {}
-            dict_list = [dist_mc_aurc, dist_sele, dist_2sele, dist_geifman_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele]
+            dict_list = [dist_mc_aurc, dist_sele, dist_2sele, dist_e_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele]
             for dictionary in dict_list:
                 mean, std = [], []
                 dict_name = [k for k, v in locals().items() if v is dictionary and k.startswith('dist')][0].replace('dist_', '')
