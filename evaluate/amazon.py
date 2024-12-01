@@ -35,7 +35,7 @@ if __name__ == '__main__':
     criterion = torch.nn.CrossEntropyLoss()
     if not os.path.isdir(output_path):
         os.makedirs(output_path, exist_ok = True)
-    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', 'geifman_aurc', '01_true_aurc']
+    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
     results = {}
     for model_name in model_names:
         results[model_name] = {}
