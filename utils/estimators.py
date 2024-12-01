@@ -12,7 +12,7 @@ __all__ = ["get_EAURC", "get_mc_AURC", "get_sele_score", "get_asy_AURC"]
 
 def get_EAURC(residuals, confidence):
     '''
-    An approximation for AURC proposed by Geifman (only valid for 0/1 loss)
+    EAURC proposed by Geifman (only valid for 0/1 loss)
 
     Args:
         residuals (list): The residuals of the model predictions.
