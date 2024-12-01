@@ -7,7 +7,7 @@ def get_label(metric_name):
         return "Ours"
     elif "sele" in metric_name and "2sele" not in metric_name:
         return "SELE"
-    elif "e_aurc" in metric_name:
+    elif metric_name == "e_aurc"::
         return "E-AURC"
     elif "true" in metric_name:
         return r"$AURC_p$"
