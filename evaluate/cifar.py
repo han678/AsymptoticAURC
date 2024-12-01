@@ -13,7 +13,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from utils.loss import get_score_function
-from utils.estimators import get_asy_AURC, get_geifman_AURC, get_mc_AURC, get_sele_score
+from utils.estimators import get_asy_AURC, get_EAURC, get_mc_AURC, get_sele_score
 
 def calculate_mean_variance(data):
     mean = statistics.mean(data)
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     for subdir in subdirs:
         os.makedirs(os.path.join(output_path, subdir), exist_ok=True)
 
-    metrics_name = ['mc_aurc', 'sele', 'true_aurc', 'asy_aurc', '01_mc_aurc', '01_sele', 'geifman_aurc', '01_true_aurc', '01_asy_aurc']
+    metrics_name = ['mc_aurc', 'sele', 'true_aurc', 'asy_aurc', '01_mc_aurc', '01_sele', 'e_aurc', '01_true_aurc', '01_asy_aurc']
     model_names = ['PreResNet20','PreResNet56', 'PreResNet110', 'PreResNet164', 'WideResNet28x10', 'VGG16BN']
     datasets = ['cifar10', 'cifar100']
     seeds = [5, 10, 21, 42, 84]
