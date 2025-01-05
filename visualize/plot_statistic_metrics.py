@@ -7,11 +7,9 @@ def get_label(metric_name):
         return "Ours"
     elif "sele" in metric_name and "2sele" not in metric_name:
         return "SELE"
-    elif metric_name == "e_aurc"::
-        return "E-AURC"
     elif "true" in metric_name:
         return r"$AURC_p$"
-    elif "asy" in metric_name:
+    elif "aurc_a" in metric_name:
         return r"$AURC_a$"
     elif "2sele" in metric_name:
         return r"$2\times$SELE"
@@ -20,7 +18,7 @@ def get_label(metric_name):
 
 def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -37,7 +35,6 @@ def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
             lower_bound = [mean - err for mean, err in zip(y, yerr)]
             upper_bound = [mean + err for mean, err in zip(y, yerr)]
             plt.fill_between(np.log2(batch_size_list), lower_bound, upper_bound, color=color, alpha=0.15)
-        
         # Ensure to plot the last metric with a specific style if it's constant across batch sizes
         if metrics_name[-1] in data_dict:
             plt.plot(np.log2(batch_size_list), [data_dict[metrics_name[-1]]] * len(batch_size_list), 
@@ -53,7 +50,7 @@ def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
 
 def plot_bias(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -81,7 +78,7 @@ def plot_bias(data_dict, batch_size_list, figs_path):
 
 def plot_mse(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -103,7 +100,7 @@ def plot_mse(data_dict, batch_size_list, figs_path):
 
 def plot_var(data_dict, batch_size_list, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -124,8 +121,8 @@ def plot_var(data_dict, batch_size_list, figs_path):
         plt.close()
 
 def plot_mae(all_seed_results, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele'] #['asy_aurc', 'sele', '2sele']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', 'e_aurc'] #['01_asy_aurc', '01_sele', '01_2sele', 'e_aurc']
+    metrics_name_1 = ['mc_aurc', 'sele'] 
+    metrics_name_2 = ['01_mc_aurc', '01_sele'] 
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2',  'C4', 'C1', 'magenta', 'yellow', 'black'] 
