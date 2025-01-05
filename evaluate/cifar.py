@@ -13,7 +13,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from utils.loss import get_score_function
-from utils.estimators import get_asy_AURC, get_EAURC, get_mc_AURC, get_sele_score
+from utils.estimators import get_ln_AURC, get_mc_AURC, get_sele_score
 
 def calculate_mean_variance(data):
     mean = statistics.mean(data)
@@ -40,7 +40,7 @@ def get_logits_and_labels(preds_dict, logits_key, labels_key):
 
 def get_batch_sample_results_from_logits(test_loader, device, score_func_name="MSP", return_all=False):
     """Load and evaluate the batch sample results for CIFAR/Amazon datasets."""
-    all_mc_aurc, all_sele, all_e_aurc, all_01_mc_aurc, all_01_sele = [], [], [], [], []
+    all_mc_aurc, all_sele, all_01_mc_aurc, all_01_sele = [], [], [], []
     EPS = 1e-7
     results= {}
     score_func = get_score_function(score_func_name)
@@ -51,21 +51,18 @@ def get_batch_sample_results_from_logits(test_loader, device, score_func_name="M
         confidences = score_func(logits).cpu().numpy()
         loss1 = zero_one_loss(scores, targets)
         loss2 = cross_entropy_loss(scores, targets)
-        e_aurc = get_EAURC(residuals=loss1, confidence=confidences)
         mc_aurc_01 = get_mc_AURC(residuals=loss1, confidence=confidences)
         sele_01 = get_sele_score(residuals=loss1, confidence=confidences)
         mc_aurc = get_mc_AURC(residuals=loss2, confidence=confidences)
         sele = get_sele_score(residuals=loss2, confidence=confidences)
         all_mc_aurc.append(mc_aurc)
         all_sele.append(sele)
-        all_e_aurc.append(e_aurc)
         all_01_mc_aurc.append(mc_aurc_01)
         all_01_sele.append(sele_01)
     if not return_all:
         results["mc_aurc"] = calculate_mean_variance(all_mc_aurc)
         results["sele"] = calculate_mean_variance(all_sele)
         results["2sele"] = calculate_mean_variance([x * 2 for x in all_sele])
-        results["e_aurc"] = calculate_mean_variance(all_e_aurc)
         results["01_mc_aurc"] = calculate_mean_variance(all_01_mc_aurc)
         results["01_sele"] = calculate_mean_variance(all_01_sele)
         results["01_2sele"] = calculate_mean_variance([x * 2 for x in all_01_sele])
@@ -73,7 +70,6 @@ def get_batch_sample_results_from_logits(test_loader, device, score_func_name="M
         results["mc_aurc"] = all_mc_aurc
         results["sele"] = all_sele
         results["2sele"] = [x * 2 for x in all_sele]
-        results["e_aurc"] = all_e_aurc
         results["01_mc_aurc"] = all_01_mc_aurc
         results["01_sele"] = all_01_sele
         results["01_2sele"] = [x * 2 for x in all_01_sele]
@@ -108,8 +104,8 @@ def get_full_data_results_from_logits(test_loader, criterion, device, score_func
     top1_acc = 100. * total_correct_1 / len(test_loader.dataset)
     top5_acc = 100. * total_correct_5 / len(test_loader.dataset)
     result = {"test_acc_1": top1_acc, "test_acc_5": top5_acc, "test_loss": loss}
-    result["01_asy_aurc"] = get_asy_AURC(residuals=loss1, confidence=all_confidences)
-    result["asy_aurc"] = get_asy_AURC(residuals=loss2, confidence=all_confidences)
+    result["01_aurc_a"] = get_ln_AURC(residuals=loss1, confidence=all_confidences)
+    result["aurc_a"] = get_ln_AURC(residuals=loss2, confidence=all_confidences)
     result["01_true_aurc"] = get_mc_AURC(residuals=loss1, confidence=all_confidences)
     result["true_aurc"] = get_mc_AURC(residuals=loss2, confidence=all_confidences)
     return result
@@ -123,7 +119,6 @@ if __name__ == '__main__':
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--seed', type=int, default=24) 
     parser.add_argument('--output_path', type=str, default='outputs')
-
 
     args = parser.parse_args()
     random.seed(args.seed)
@@ -141,15 +136,15 @@ if __name__ == '__main__':
     for subdir in subdirs:
         os.makedirs(os.path.join(output_path, subdir), exist_ok=True)
 
-    metrics_name = ['mc_aurc', 'sele', 'true_aurc', 'asy_aurc', '01_mc_aurc', '01_sele', 'e_aurc', '01_true_aurc', '01_asy_aurc']
-    model_names = ['PreResNet20','PreResNet56', 'PreResNet110', 'PreResNet164', 'WideResNet28x10', 'VGG16BN']
+    metrics_name = ['mc_aurc', 'sele', 'true_aurc', 'aurc_a', '01_mc_aurc', '01_sele',  '01_true_aurc', '01_aurc_a']
+    model_names = ['PreResNet20'] # ['PreResNet20','PreResNet56', 'PreResNet110', 'PreResNet164', 'WideResNet28x10', 'VGG16BN']
     datasets = ['cifar10', 'cifar100']
     seeds = [5, 10, 21, 42, 84]
     for dataset in datasets: 
         results = {}
         for model_name in model_names: 
             results[model_name] = {}
-            dist_mc_aurc, dist_sele, dist_2sele, dist_e_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(7))
+            dist_mc_aurc, dist_sele, dist_2sele, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(6))
             for seed in seeds:
                 results[model_name][str(seed)] = {}
                 folder_name = f'{dataset}_{model_name}_250_{seed}_output_{seed}'
@@ -188,18 +183,18 @@ if __name__ == '__main__':
                 plot_bias(results[model_name][str(seed)], batch_size_list=batch_size_list, figs_path=figs_path3)
 
             # Calculate mean and variance of the abs(bias) terms across different models
+            batch_size_list = [8, 16, 32, 64, 128, 256, 512, 1024]
             for batch_size in batch_size_list:
-                dist_mc_aurc[str(batch_size)], dist_sele[str(batch_size)], dist_2sele[str(batch_size)], dist_e_aurc[str(batch_size)], dist_01_mc_aurc[str(batch_size)], dist_01_sele[str(batch_size)], dist_01_2sele[str(batch_size)] = ([] for _ in range(7))
+                dist_mc_aurc[str(batch_size)], dist_sele[str(batch_size)], dist_2sele[str(batch_size)], dist_01_mc_aurc[str(batch_size)], dist_01_sele[str(batch_size)], dist_01_2sele[str(batch_size)] = ([] for _ in range(6))
                 for seed in seeds:
                     dist_mc_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["mc_aurc"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
                     dist_sele[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["sele"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
                     dist_2sele[str(batch_size)].append(abs(2 * results[model_name][str(seed)][str(batch_size)]["sele"]["mean"]-results[model_name][str(seed)]["true_aurc"]))
-                    dist_e_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["e_aurc"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_mc_aurc[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["01_mc_aurc"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_sele[str(batch_size)].append(abs(results[model_name][str(seed)][str(batch_size)]["01_sele"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
                     dist_01_2sele[str(batch_size)].append(abs(2 * results[model_name][str(seed)][str(batch_size)]["01_sele"]["mean"]-results[model_name][str(seed)]["01_true_aurc"]))
             all_seed_results = {}
-            dict_list = [dist_mc_aurc, dist_sele, dist_2sele, dist_e_aurc, dist_01_mc_aurc, dist_01_sele, dist_01_2sele]
+            dict_list = [dist_mc_aurc, dist_sele, dist_2sele, dist_01_mc_aurc, dist_01_sele, dist_01_2sele]
             for dictionary in dict_list:
                 mean, std = [], []
                 dict_name = [k for k, v in locals().items() if v is dictionary and k.startswith('dist')][0].replace('dist_', '')
@@ -212,8 +207,7 @@ if __name__ == '__main__':
             print(f"({dataset}) {model_name}: \n ")
             print(f"mc_aurc: {all_seed_results['mc_aurc']['mean']} ({all_seed_results['mc_aurc']['std']})")
             print(f"sele: {all_seed_results['sele']['mean']} ({all_seed_results['sele']['std']})")
-            print(f"2*sele: {all_seed_results['2sele']['mean']} ({all_seed_results['2sele']['std']})")
-            print(f"e_aurc: {all_seed_results['e_aurc']['mean']} ({all_seed_results['e_aurc']['std']})")    
+            print(f"2*sele: {all_seed_results['2sele']['mean']} ({all_seed_results['2sele']['std']})")   
             print(f"01_mc_aurc: {all_seed_results['01_mc_aurc']['mean']} ({all_seed_results['01_mc_aurc']['std']})")
             print(f"01_sele: {all_seed_results['01_sele']['mean']} ({all_seed_results['01_sele']['std']})")
             print(f"01_2sele: {all_seed_results['01_2sele']['mean']} ({all_seed_results['01_2sele']['std']})")
