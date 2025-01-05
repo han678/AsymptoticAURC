@@ -22,8 +22,8 @@ def compute_mc_alphas(n, use_diagamma=True):
     return alphas
 
 
-def compute_asy_alphas(n):
-    # alphas for asymptotic AURC given infinite samples.(used when compute population asy AURC) 
+def compute_ln_approx_alphas(n):
+    # alphas for AURC with ln formular given infinite samples.(used when compute population AURC) 
     alphas = [0] * n
     eps = 1e-7
     for rank in range(1, n + 1):
@@ -108,6 +108,10 @@ class mcAURCLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
         super().__init__(criterion, score_function, batch_size, reduction, compute_mc_alphas)
 
+
+class SeleLoss(BaseAURCLoss):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+        super().__init__(criterion, score_function, batch_size, reduction, sele_alphas)
 
 class SeleLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
