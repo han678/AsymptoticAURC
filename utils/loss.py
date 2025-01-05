@@ -28,7 +28,7 @@ def compute_ln_approx_alphas(n):
     eps = 1e-7
     for rank in range(1, n + 1):
         if rank == n:
-            alpha = (np.log(1 - rank / n + eps)) / n 
+            alpha = -(np.log(1 - rank / n + eps)) / n 
         else:
             alpha = -np.log(1 - rank / n) / n
         alphas[rank - 1] = alpha
