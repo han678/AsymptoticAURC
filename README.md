@@ -1,5 +1,3 @@
-## Asymptotic AURC
-
 This repository contains the code for the paper **"A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators"** [[arxiv](https://arxiv.org/pdf/2410.15361)].
 
 #### Key Dependencies
