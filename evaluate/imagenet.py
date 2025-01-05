@@ -1,6 +1,9 @@
 import timm 
 
 import argparse
+import timm 
+
+import argparse
 import os
 import random
 import numpy as np
@@ -12,11 +15,11 @@ from visualize import plot_csf
 from visualize.plot_statistic_metrics import plot_aurc_metrics, plot_bias, plot_mse
 import torch.nn.functional as F
 from utils.loss import get_score_function
-from utils.estimators import get_asy_AURC, get_EAURC, get_mc_AURC, get_sele_score
+from utils.estimators import get_ln_AURC, get_AURC, get_mc_AURC, get_sele_score
 
 def get_batch_sample_results(model, test_loader, device, score_func_name="softmax", return_all=False):
     """Load and evaluate the batch sample results for ImageNet dataset."""
-    all_mc_aurc, all_sele, all_e_aurc, all_01_mc_aurc, all_01_sele = [], [], [], [], []
+    all_mc_aurc, all_sele, all_01_mc_aurc, all_01_sele = [], [], [], []
     EPS = 1e-7
     results= {}
     score_func = get_score_function(score_func_name)
@@ -29,21 +32,19 @@ def get_batch_sample_results(model, test_loader, device, score_func_name="softma
             targets = F.one_hot(targets, num_classes=logits.shape[1]).to(device).cpu().numpy()
             loss1 = zero_one_loss(scores, targets)
             loss2 = cross_entropy_loss(scores, targets)
-            e_aurc = get_e_AURC(residuals=loss1, confidence=confidences)
+            aurc = get_AURC(residuals=loss1, confidence=confidences)
             mc_aurc_01 = get_mc_AURC(residuals=loss1, confidence=confidences)
             sele_01 = get_sele_score(residuals=loss1, confidence=confidences)
             mc_aurc = get_mc_AURC(residuals=loss2, confidence=confidences)
             sele = get_sele_score(residuals=loss2, confidence=confidences)
             all_mc_aurc.append(mc_aurc)
             all_sele.append(sele)
-            all_e_aurc.append(e_aurc)
             all_01_mc_aurc.append(mc_aurc_01)
             all_01_sele.append(sele_01)
     if not return_all:
         results["mc_aurc"] = calculate_mean_variance(all_mc_aurc)
         results["sele"] = calculate_mean_variance(all_sele)
         results["2sele"] = calculate_mean_variance([x * 2 for x in all_sele])
-        results["e_aurc"] = calculate_mean_variance(all_e_aurc)
         results["01_mc_aurc"] = calculate_mean_variance(all_01_mc_aurc)
         results["01_sele"] = calculate_mean_variance(all_01_sele)
         results["01_2sele"] = calculate_mean_variance([x * 2 for x in all_01_sele])
@@ -51,7 +52,6 @@ def get_batch_sample_results(model, test_loader, device, score_func_name="softma
         results["mc_aurc"] = all_mc_aurc
         results["sele"] = all_sele
         results["2sele"] = [x * 2 for x in all_sele]
-        results["e_aurc"] = all_e_aurc
         results["01_mc_aurc"] = all_01_mc_aurc
         results["01_sele"] = all_01_sele
         results["01_2sele"] = [x * 2 for x in all_01_sele]
@@ -88,8 +88,8 @@ def get_full_data_results(model, test_loader, device, score_func_name="softmax")
     top5_acc = 100. * total_correct_5 / len(test_loader.dataset)
     result = {"test_acc_1": top1_acc, "test_acc_5": top5_acc}
     result["01_true_aurc"] = get_mc_AURC(residuals=loss1, confidence=all_confidences)
-    result["asy_aurc"] = get_asy_AURC(residuals=loss2, confidence=all_confidences)
-    result["01_asy_aurc"] = get_asy_AURC(residuals=loss1, confidence=all_confidences)
+    result["aurc_a"] = get_ln_AURC(residuals=loss2, confidence=all_confidences)
+    result["01_aurc_a"] = get_ln_AURC(residuals=loss1, confidence=all_confidences)
     result["true_aurc"] = get_mc_AURC(residuals=loss2, confidence=all_confidences)
     return result
 
@@ -97,8 +97,8 @@ def get_full_data_results(model, test_loader, device, score_func_name="softmax")
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', type=str, default='cuda:0')
-    parser.add_argument('--data_dir', type=str, default='./data/ILSVRC2012')
-    parser.add_argument('--num_workers', type=int, default=4)
+    parser.add_argument('--data_dir', type=str, default='./ILSVRC2012')
+    parser.add_argument('--num_workers', type=int, default=1)
     parser.add_argument('--seed', type=int, default=20)
     parser.add_argument('--dataset', type=str, default='imagenet')
     parser.add_argument('--output_path', type=str, default='outputs')
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     subdirs = ['estimator', 'mse', 'bias', 'csf']
     for subdir in subdirs:
         os.makedirs(os.path.join(output_path, subdir), exist_ok=True)
-    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     results = {}
     batch_size_list = [16, 32, 64, 128, 256, 512, 1024]
     
@@ -132,7 +132,7 @@ if __name__ == '__main__':
         for batch_size in batch_size_list:
             print(f'batch size: {batch_size}')
             results[model_name][str(batch_size)] = {}
-            loader = prepare_dataset(args.dataset, batch_size=batch_size, load_train=False, num_workers=4, data_dir=args.data_dir) 
+            loader = prepare_dataset(args.dataset, batch_size=batch_size, load_train=False, num_workers=num_workers, data_dir=args.data_dir) 
             batch_sample_results = get_batch_sample_results(model, loader, device, score_func_name)
             results[model_name][str(batch_size)].update(batch_sample_results)
         full_data_results = get_full_data_results(model, loader, device, score_func_name)
@@ -157,4 +157,3 @@ if __name__ == '__main__':
             results[score_function_name].update(full_data_results)
         figs_path = os.path.join(output_path, f'csf/imagenet_{model_name}')
         plot_csf(results, score_function_names, figs_path=figs_path)
-        
