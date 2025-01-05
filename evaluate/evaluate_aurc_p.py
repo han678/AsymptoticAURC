@@ -26,7 +26,7 @@ def plot_population_aurc(results, data_names, figs_path):
             y = []
             for model_name in results[dataset].keys():
                 x_value = results[dataset][model_name]['01_true_aurc'] if loss_type == '01' else results[dataset][model_name]['true_aurc']
-                y_value = results[dataset][model_name]['01_asy_aurc'] if loss_type == '01' else results[dataset][model_name]['asy_aurc']
+                y_value = results[dataset][model_name]['01_aurc_a'] if loss_type == '01' else results[dataset][model_name]['aurc_a']
                 x.append(x_value)
                 y.append(y_value)
                 list1.append(x_value)
@@ -89,6 +89,7 @@ if __name__ == '__main__':
                 for seed in [5, 10, 21, 42, 84]:
                     results[dataset][f'{model_name}_{seed}'] = {}
                     folder_name = f'{dataset}_{model_name}_250_{seed}_output_{seed}'
+
                     path_to_root_folder = os.path.join(f'{output_path}/cifar', folder_name)
                     print("Root folder path: ", path_to_root_folder)
                     cache_path = os.path.join(path_to_root_folder, '*', '*', '*cache*')
