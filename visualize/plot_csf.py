@@ -25,7 +25,7 @@ def get_score_name(score_func_name):
 
 def plot_csf(data_dict, score_function_names, figs_path):
     metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_asy_aurc', '01_sele', '01_2sele', 'e_aurc', '01_true_aurc']
+    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
     colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
@@ -33,7 +33,6 @@ def plot_csf(data_dict, score_function_names, figs_path):
     for i in range(len(metrics)):
         metrics_name = metrics[i]
         plt.figure(figsize=(10, 8))
-
         num_metrics = len(metrics_name)
         num_score_functions = len(score_function_names)
         group_spacing = 1.5  # Space between groups of boxplots
@@ -48,14 +47,15 @@ def plot_csf(data_dict, score_function_names, figs_path):
             data_to_plot = [data_dict[score_function][metric] for metric in metrics_name if 'true_aurc' not in metric]
             pos_range = positions[j*(num_metrics - 1):(j+1)*(num_metrics - 1)]
             box = plt.boxplot(data_to_plot, patch_artist=True, positions=pos_range, widths=0.2)
+
             for patch, color in zip(box['boxes'], colors[:num_metrics - 1]):
                 patch.set_facecolor(color)
                 patch.set_alpha(0.7) 
             true_aurc_value = np.mean(data_dict[score_function][metrics_name[-1]])  # Use the mean as the value for the horizontal line
             plt.hlines(y=true_aurc_value, xmin=pos_range[0] - 0.3, xmax=pos_range[-1] + 0.3, color=colors[-1], linestyle='--', label=f"{metrics_name[-1]} for {score_function}")
             group_midpoints.append(np.mean(pos_range))
-        plt.xticks(group_midpoints, [get_score_name(score_func) for score_func in score_function_names], rotation=0, ha="center", fontsize="large")
-        plt.ylabel('Metric Value', fontsize="large")
+        plt.xticks(group_midpoints, [get_score_name(score_func) for score_func in score_function_names], rotation=0, ha="center", fontsize=16)
+        plt.ylabel('Metric Value', fontsize=18)
         legend_handles = []
         for k in range(num_metrics - 1):  # Legend for metrics except 'true_aurc'
             patch = mpatches.Patch(color=colors[k], label=get_label(metrics_name[k]))
@@ -63,7 +63,7 @@ def plot_csf(data_dict, score_function_names, figs_path):
             legend_handles.append(patch)
         true_aurc_line = Line2D([0], [0], color=colors[-1], linestyle='--', label=get_label(metrics_name[-1]))
         legend_handles.append(true_aurc_line) 
-        plt.legend(handles=legend_handles, loc='upper left', fontsize="large", ncol=len(legend_handles))
+        plt.legend(handles=legend_handles, loc='upper left', fontsize=18, ncol=len(legend_handles))
         plt.tight_layout()
         plt.savefig(f'{figs_path}{descrip[i]}.png')
         plt.show()
