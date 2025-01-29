@@ -6,31 +6,25 @@ from torch import Tensor
 from torch.nn.modules.loss import _Loss
 
 
-def compute_mc_alphas(n, use_diagamma=True):
-    # alpha for mcmc AURC given finite samples.
+def compute_harmonic_alphas(n, use_diagamma=True):
+    # alpha in harmonic numbers
     alphas = [0] * n
     if use_diagamma:
         for rank in range(1, n + 1):
-            # Using the digamma function for approximations
-            alphas[rank - 1] = (digamma(n) - digamma(n - rank + 1)) / n
+            alphas[rank - 1] = digamma(n + 1) - digamma(n - rank + 1)
     else:
-        # Compute alphas using the exact method
         cumulative_sum = 0
-        for rank in range(1, n):
-            cumulative_sum += 1 / (n - rank)
-            alphas[rank - 1] = cumulative_sum / n
+        for rank in range(1, n + 1):
+            cumulative_sum += 1 / (n - rank + 1)
+            alphas[rank - 1] = cumulative_sum
     return alphas
 
 
-def compute_ln_approx_alphas(n):
-    # alphas for AURC with ln formular given infinite samples.(used when compute population AURC) 
+def compute_ln_alphas(n):
+    # alphas in ln formular.(also used when compute population AURC_a) 
     alphas = [0] * n
-    eps = 1e-7
     for rank in range(1, n + 1):
-        if rank == n:
-            alpha = -(np.log(1 - rank / n + eps)) / n 
-        else:
-            alpha = -np.log(1 - rank / n) / n
+        alpha = -np.log(1 - rank / (n + 1))
         alphas[rank - 1] = alpha
     return alphas
 
@@ -38,7 +32,7 @@ def compute_ln_approx_alphas(n):
 def sele_alphas(n):
     alphas = [0] * n
     for rank in range(1, n + 1):
-        alpha = (rank / n) / n #alpha = (1 - (rank - 1) / n) / n
+        alpha = (rank / n) 
         alphas[rank - 1] = alpha
     return alphas
 
@@ -86,6 +80,7 @@ class BaseAURCLoss(_Loss):
         self.reduction = reduction
         self.score_func = get_score_function(score_function)
         self.alphas = alpha_fn(batch_size) if alpha_fn is not None else None
+        self.batch_size = batch_size
 
     def forward(self, input: Tensor, target: Tensor) -> Tensor:
         with torch.no_grad():
@@ -93,8 +88,7 @@ class BaseAURCLoss(_Loss):
             indices_sorted = torch.argsort(confidence, descending=False)
             reverse_indices = torch.argsort(indices_sorted)
             reordered_alphas = torch.tensor(self.alphas, dtype=input.dtype, device=input.device)[reverse_indices]
-
-        losses = self.criterion(input, target) * reordered_alphas
+        losses = self.criterion(input, target) * reordered_alphas / self.batch_size
 
         if self.reduction == 'mean':
             return torch.mean(losses)
@@ -104,14 +98,13 @@ class BaseAURCLoss(_Loss):
             return losses
 
 
-class mcAURCLoss(BaseAURCLoss):
+class EmAURCLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
-        super().__init__(criterion, score_function, batch_size, reduction, compute_mc_alphas)
+        super().__init__(criterion, score_function, batch_size, reduction, compute_harmonic_alphas)
 
-
-class SeleLoss(BaseAURCLoss):
+class LnAURCLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
-        super().__init__(criterion, score_function, batch_size, reduction, sele_alphas)
+        super().__init__(criterion, score_function, batch_size, reduction, compute_ln_alphas)
 
 class SeleLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
