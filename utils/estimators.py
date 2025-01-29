@@ -2,9 +2,9 @@ from __future__ import print_function, absolute_import
 
 import numpy as np
 
-from utils.loss import compute_ln_approx_alphas, compute_mc_alphas, sele_alphas
+from utils.loss import compute_ln_alphas, compute_harmonic_alphas, sele_alphas
 
-__all__ = ["get_AURC", "get_mc_AURC", "get_sele_score", "get_ln_AURC"]
+__all__ = ["get_AURC", "get_em_AURC", "get_sele_score", "get_ln_AURC"]
 
 def get_AURC(residuals, confidence):
     '''
@@ -30,12 +30,12 @@ def get_AURC(residuals, confidence):
     AUC = sum([a[1] for a in curve])/len(curve)
     return AUC
 
-def get_mc_AURC(residuals, confidence):
+def get_em_AURC(residuals, confidence):
     m = len(residuals)
     idx_sorted = np.argsort(confidence)
     temp1 = residuals[idx_sorted]
-    alphas = compute_mc_alphas(n=m)
-    mc_AURC = sum(np.array(temp1) *alphas)
+    alphas = compute_harmonic_alphas(n=m)
+    mc_AURC = sum(np.array(temp1) * alphas / m)
     return mc_AURC
 
 def get_ln_AURC(residuals, confidence):
@@ -47,14 +47,14 @@ def get_ln_AURC(residuals, confidence):
         confidence (list): The confidence of the model predictions.
 
     Returns:
-        float: The asymptotic AURC.         
+        float: AURC estimator with ln weights.         
 
     '''
     m = len(residuals)
     idx_sorted = np.argsort(confidence)
     temp1 = residuals[idx_sorted]
-    alphas = compute_ln_approx_alphas(n=m)
-    ln_AURC = sum(np.array(temp1) *alphas)
+    alphas = compute_ln_alphas(n=m)
+    ln_AURC = sum(np.array(temp1) * alphas / m)
     return ln_AURC
 
 def get_sele_score(residuals, confidence):
@@ -73,5 +73,5 @@ def get_sele_score(residuals, confidence):
     idx_sorted = np.argsort(confidence)
     temp1 = residuals[idx_sorted]
     alphas = sele_alphas(n=m)
-    score = sum(np.array(temp1) *alphas)
+    score = sum(np.array(temp1) * alphas / m)
     return score
