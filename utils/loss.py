@@ -109,3 +109,4 @@ class LnAURCLoss(BaseAURCLoss):
 class SeleLoss(BaseAURCLoss):
     def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
         super().__init__(criterion, score_function, batch_size, reduction, sele_alphas)
+
