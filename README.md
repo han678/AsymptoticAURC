@@ -34,12 +34,12 @@ To evaluate the performance of AURC estimators on the Amazon dataset, use the fo
 cd evaluate
 python amazon.py
 ```
-
+ 
 After running the script, the results will be saved in the `outputs` folder, which contains figures visualizing the estimator performance, as shown below:
 <div style="display: flex; justify-content: space-between;">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0527496e214e436dd2bb2af3f03b76e38d5f3189/outputs/bias/amazon_bert.png" alt="Bias Figure" width="260">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0527496e214e436dd2bb2af3f03b76e38d5f3189/outputs/mse/amazon_bert.png" alt="MSE Figure" width="260">
-  <img src="https://github.com/han678/AsymptoticAURC/blob/0527496e214e436dd2bb2af3f03b76e38d5f3189/outputs/csf/amazon_bert.png" alt="CSF Figure" width="240">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/63c7630c11a15e37f1c3bf7d454e25fb3fcf84d0/outputs/bias/amazon_bert.png" alt="Bias Figure" width="260">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/63c7630c11a15e37f1c3bf7d454e25fb3fcf84d0/outputs/mse/amazon_bert.png" alt="MSE Figure" width="260">
+  <img src="https://github.com/han678/AsymptoticAURC/blob/63c7630c11a15e37f1c3bf7d454e25fb3fcf84d0/outputs/csf/amazon_bert.png" alt="CSF Figure" width="240">
 </div>
  
 These figures help visualize the bias, mean squared error (MSE), and different confidence score functions (CSFs) for the AURC estimators on the Amazon dataset.
