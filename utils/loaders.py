@@ -85,19 +85,19 @@ def prepare_dataset(dataset_name, batch_size, load_train=True, num_workers=4, sh
     transform = transform_train if load_train else transform_test
     if dataset_name == 'cifar10':
         if load_train:
-            dataset = datasets.CIFAR10(root=data_dir, train=True, download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.CIFAR10(root=data_dir, train=True, download=True, transform=transform)
         else:
-            dataset = datasets.CIFAR10(root=data_dir, train=False, download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.CIFAR10(root=data_dir, train=False, download=True, transform=transform)
     elif dataset_name == 'cifar100':
         if load_train:
-            dataset = datasets.CIFAR100(root=data_dir, train=True, download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.CIFAR100(root=data_dir, train=True, download=True, transform=transform)
         else:
-            dataset = datasets.CIFAR100(root=data_dir, train=False, download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.CIFAR100(root=data_dir, train=False, download=True, transform=transform)
     elif dataset_name == 'svhn':
         if load_train:
-            dataset = datasets.SVHN(root=data_dir, split='train', download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.SVHN(root=data_dir, split='train', download=True, transform=transform)
         else:
-            dataset = datasets.SVHN(root=data_dir, split='test', download=True, transform=transform, shuffle=shuffle)
+            dataset = datasets.SVHN(root=data_dir, split='test', download=True, transform=transform)
     elif dataset_name == 'imagenet':
         if load_train:
             datadir = os.path.join(data_dir, 'train')
@@ -108,3 +108,4 @@ def prepare_dataset(dataset_name, batch_size, load_train=True, num_workers=4, sh
         raise ValueError(f"Unsupported dataset: {dataset_name}")
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
     return dataloader
+
