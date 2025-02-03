@@ -18,14 +18,10 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=20) # 21
     parser.add_argument('--output_path', type=str, default='outputs')
 
-
     args = parser.parse_args()
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
     args_dict = vars(args)
     path = args_dict['path_to_trained_models_outputs']
-    model_names =  ['bert'] # ['bert','distill_bert', 'distill_roberta', 'roberta']
+    model_names = ['bert','distill_bert', 'distill_roberta', 'roberta']
     device = args_dict['device']
     num_workers = args_dict['num_workers']
     output_path = args_dict['output_path']
@@ -36,11 +32,10 @@ if __name__ == '__main__':
     criterion = torch.nn.CrossEntropyLoss()
     if not os.path.isdir(output_path):
         os.makedirs(output_path, exist_ok = True)
-    metrics_name = ['mc_aurc', 'sele', '2sele',  'true_aurc', '01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
     results = {}
     for model_name in model_names:
         results[model_name] = {}
-        dist_mc_aurc, dist_sele, dist_2sele, dist_01_mc_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(6))
+        dist_em_aurc, dist_sele, dist_2sele, dist_01_em_aurc, dist_01_sele, dist_01_2sele = ({} for _ in range(6))
         folder_name = f'amazon_{model_name}'
         path_to_root_folder = os.path.join(path, folder_name)
         print("Root folder path: ", path_to_root_folder)
@@ -52,8 +47,11 @@ if __name__ == '__main__':
         batch_size_list = [8, 16, 32, 64, 128, 256, 512, 1024]
         test_set = CustomTensorDataset(tensors=(logits_test, labels_test), transform=None)
         for batch_size in batch_size_list:
+            random.seed(args.seed)
+            np.random.seed(args.seed)
+            torch.manual_seed(args.seed)
             results[model_name][str(batch_size)] = {}
-            loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+            loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
             batch_sample_results = get_batch_sample_results_from_logits(loader, device)
             results[model_name][str(batch_size)].update(batch_sample_results)
         full_data_results = get_full_data_results_from_logits(loader, criterion, device, score_func_name="MSP")
@@ -71,9 +69,9 @@ if __name__ == '__main__':
         score_function_names = ["MSP", "NegEntropy", "SoftmaxMargin", "MaxLogit", "l2_norm", "NegGiniScore"]
         results = {}
         batch_size = 128
+        loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
         for score_function_name in score_function_names:
             results[score_function_name] = {}
-            loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
             batch_sample_results = get_batch_sample_results_from_logits(loader, device, score_func_name=score_function_name, return_all=True)
             results[score_function_name].update(batch_sample_results)
             full_data_results = get_full_data_results_from_logits(loader, criterion, device, score_func_name=score_function_name)
