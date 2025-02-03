@@ -3,8 +3,10 @@ import numpy as np
 
 
 def get_label(metric_name):
-    if "mc" in metric_name:
-        return "Ours"
+    if "em" in metric_name:
+        return r"$\hat{\alpha}$ Est."
+    elif "ln" in metric_name:
+        return r"$\hat{\alpha}^{\prime}$ Est."
     elif "sele" in metric_name and "2sele" not in metric_name:
         return "SELE"
     elif "true" in metric_name:
@@ -17,15 +19,15 @@ def get_label(metric_name):
         return metric_name
 
 def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
+    metrics_name_1 = ['em_aurc', 'ln_aurc', 'sele', '2sele', 'true_aurc']
+    metrics_name_2 = ['01_em_aurc', '01_ln_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
-    colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
+    colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
 
     for i in range(len(metrics)):
         metrics_name = metrics[i]
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(10, 8), tight_layout=True)
         for metric, color in zip(metrics_name[0:-1], colors):  # Use zip to iterate over metrics and colors
             y, yerr = [], []
             for batch_size in batch_size_list:
@@ -40,8 +42,10 @@ def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
             plt.plot(np.log2(batch_size_list), [data_dict[metrics_name[-1]]] * len(batch_size_list), 
                      label=get_label(metrics_name[-1]), color='black', linestyle=':')
         
-        plt.xlabel(r'$\log_2(n)$', fontsize=24)
-        plt.ylabel('Finite sample estimator', fontsize=24)
+        plt.xlabel(r'$\log_2(n)$', fontsize=25)
+        plt.ylabel('Finite sample estimator', fontsize=25)
+        plt.xticks(fontsize=22) 
+        plt.yticks(fontsize=20) 
         plt.legend(fontsize=23)
         #plt.grid(True)
         plt.savefig(f'{figs_path}{descrip[i]}.png')
@@ -49,15 +53,15 @@ def plot_aurc_metrics(data_dict, batch_size_list, figs_path):
         plt.close()
 
 def plot_bias(data_dict, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
+    metrics_name_1 = ['em_aurc', 'ln_aurc', 'sele', '2sele', 'true_aurc']
+    metrics_name_2 = ['01_em_aurc', '01_ln_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
-    colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
+    colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
 
     for i in range(len(metrics)):
         metrics_name = metrics[i]
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(10, 8), tight_layout=True)
         for metric, color in zip(metrics_name[0:-1], colors):  # Use zip to iterate over metrics and colors
             y, yerr = [], []
             for batch_size in batch_size_list:
@@ -68,8 +72,10 @@ def plot_bias(data_dict, batch_size_list, figs_path):
             upper_bound = [mean + err for mean, err in zip(y, yerr)]
             plt.fill_between(np.log2(batch_size_list), lower_bound, upper_bound, color=color, alpha=0.15)
         
-        plt.xlabel(r'$\log_2(n)$', fontsize=24)
-        plt.ylabel('Bias', fontsize=24)
+        plt.xlabel(r'$\log_2(n)$', fontsize=25)
+        plt.ylabel('Bias', fontsize=25)
+        plt.xticks(fontsize=22) 
+        plt.yticks(fontsize=20) 
         plt.legend(fontsize=24)
         #plt.grid(True)
         plt.savefig(f'{figs_path}{descrip[i]}.png')
@@ -77,37 +83,39 @@ def plot_bias(data_dict, batch_size_list, figs_path):
         plt.close()
 
 def plot_mse(data_dict, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
+    metrics_name_1 = ['em_aurc', 'ln_aurc', 'sele', '2sele', 'true_aurc']
+    metrics_name_2 = ['01_em_aurc', '01_ln_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
-    colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
+    colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']   # List of colors for the plots
 
     for i in range(len(metrics)):
         metrics_name = metrics[i]
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(10, 8), tight_layout=True)
         for metric, color in zip(metrics_name[0:-1], colors):  # Use zip to iterate over metrics and colors
             y = []
             for batch_size in batch_size_list:
                 y.append((data_dict[str(batch_size)][metric]['mean']-data_dict[metrics_name[-1]])**2)
             plt.plot(np.log2(batch_size_list), y, 'o-', color=color, label=get_label(metric))
-        plt.xlabel(r'$\log_2(n)$', fontsize=24)
-        plt.ylabel('MSE', fontsize=24)
+        plt.xticks(fontsize=22) 
+        plt.yticks(fontsize=20) 
+        plt.xlabel(r'$\log_2(n)$', fontsize=25)
+        plt.ylabel('MSE', fontsize=25)
         plt.legend(fontsize=24)
         plt.savefig(f'{figs_path}{descrip[i]}.png')
         plt.show()
         plt.close()
 
 def plot_var(data_dict, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele', '2sele', 'true_aurc']
-    metrics_name_2 = ['01_mc_aurc', '01_sele', '01_2sele', '01_true_aurc']
+    metrics_name_1 = ['em_aurc', 'ln_aurc', 'sele', '2sele', 'true_aurc']
+    metrics_name_2 = ['01_em_aurc', '01_ln_aurc', '01_sele', '01_2sele', '01_true_aurc']
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
-    colors = ['C0', 'C2', 'C1',  'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
+    colors = ['C0', 'C2', 'C1', 'C4', 'magenta', 'yellow', 'black']  # List of colors for the plots
 
     for i in range(len(metrics)):
         metrics_name = metrics[i]
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(10, 8), tight_layout=True)
         for metric, color in zip(metrics_name[0:-1], colors):  # Use zip to iterate over metrics and colors
             y = []
             for batch_size in batch_size_list:
@@ -116,20 +124,22 @@ def plot_var(data_dict, batch_size_list, figs_path):
         plt.xlabel(r'$\log_2(n)$', fontsize=20)
         plt.ylabel('Variance', fontsize=20)
         plt.legend(fontsize=19)
+        plt.xticks(fontsize=22) 
+        plt.yticks(fontsize=20) 
         plt.savefig(f'{figs_path}{descrip[i]}.png')
         plt.show()
         plt.close()
 
 def plot_mae(all_seed_results, batch_size_list, figs_path):
-    metrics_name_1 = ['mc_aurc', 'sele'] 
-    metrics_name_2 = ['01_mc_aurc', '01_sele'] 
+    metrics_name_1 = ['em_aurc', 'ln_aurc', 'sele'] 
+    metrics_name_2 = ['01_em_aurc', '01_ln_aurc', '01_sele'] 
     metrics = [metrics_name_1, metrics_name_2]
     descrip = ["_ce", ""]
-    colors = ['C0', 'C2',  'C4', 'C1', 'magenta', 'yellow', 'black'] 
+    colors = ['C0', 'C2', 'C1', 'C4', 'C5', 'magenta', 'yellow', 'black'] 
 
     for i in range(len(metrics)):
         metrics_name = metrics[i]
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(10, 8), tight_layout=True)
         for metric, color in zip(metrics_name, colors):
             y, yerr = all_seed_results[metric]['mean'], all_seed_results[metric]['std']
             plt.errorbar(np.log2(batch_size_list), y, yerr, fmt='o', label=get_label(metric), capsize=4, color=color)
@@ -137,8 +147,10 @@ def plot_mae(all_seed_results, batch_size_list, figs_path):
             upper_bound = [mean + err for mean, err in zip(y, yerr)]
             plt.fill_between(np.log2(batch_size_list), lower_bound, upper_bound, color=color, alpha=0.15)
         
-        plt.xlabel(r'$\log_2(n)$', fontsize=24)
-        plt.ylabel('MAE', fontsize=24)
+        plt.xlabel(r'$\log_2(n)$', fontsize=25)
+        plt.ylabel('MAE', fontsize=25)
+        plt.xticks(fontsize=22) 
+        plt.yticks(fontsize=20) 
         plt.legend(fontsize=20, ncol=len(metrics_name), loc='upper left')
         #plt.grid(True)
         plt.savefig(f'{figs_path}{descrip[i]}.png')
