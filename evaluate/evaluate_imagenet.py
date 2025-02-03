@@ -104,7 +104,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', type=str, default='cuda:0')
     parser.add_argument('--model', type=list, default=['vit_small_patch16_224'])
-    parser.add_argument('--data_dir', type=str, default='/staging/leuven/stg_00081/hzhou/datasets/ILSVRC2012')
+    parser.add_argument('--data_dir', type=str, default='/datasets/ILSVRC2012')
     parser.add_argument('--num_workers', type=int, default=1)
     parser.add_argument('--seed', type=int, default=20)
     parser.add_argument('--dataset', type=str, default='imagenet')
