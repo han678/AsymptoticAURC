@@ -88,8 +88,7 @@ class BaseAURCLoss(_Loss):
             indices_sorted = torch.argsort(confidence, descending=False)
             reverse_indices = torch.argsort(indices_sorted)
             reordered_alphas = torch.tensor(self.alphas, dtype=input.dtype, device=input.device)[reverse_indices]
-        losses = self.criterion(input, target) * reordered_alphas / self.batch_size
-
+        losses = self.criterion(input, target) * reordered_alphas
         if self.reduction == 'mean':
             return torch.mean(losses)
         elif self.reduction == 'sum':
