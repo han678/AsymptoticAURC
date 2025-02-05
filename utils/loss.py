@@ -73,7 +73,7 @@ def get_score_function(name):
 
 
 class BaseAURCLoss(_Loss):
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", batch_size=128, reduction='sum', alpha_fn=None):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), score_function="MSP", batch_size=128, reduction='mean', alpha_fn=None):
         super().__init__(reduction=reduction)
         self.criterion = criterion
         self.criterion.reduction = 'none'
@@ -98,14 +98,14 @@ class BaseAURCLoss(_Loss):
 
 
 class EmAURCLoss(BaseAURCLoss):
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='mean'):
         super().__init__(criterion, score_function, batch_size, reduction, compute_harmonic_alphas)
 
 class LnAURCLoss(BaseAURCLoss):
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='mean'):
         super().__init__(criterion, score_function, batch_size, reduction, compute_ln_alphas)
 
 class SeleLoss(BaseAURCLoss):
-    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='sum'):
+    def __init__(self, criterion=torch.nn.CrossEntropyLoss(), batch_size=128, score_function="MSP", reduction='mean'):
         super().__init__(criterion, score_function, batch_size, reduction, sele_alphas)
 
