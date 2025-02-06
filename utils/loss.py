@@ -7,17 +7,10 @@ from torch.nn.modules.loss import _Loss
 
 
 def compute_harmonic_alphas(n, use_diagamma=True):
-    # alpha in harmonic numbers
-    alphas = [0] * n
     if use_diagamma:
-        for rank in range(1, n + 1):
-            alphas[rank - 1] = digamma(n + 1) - digamma(n - rank + 1)
+        return [digamma(n + 1) - digamma(n - rank + 1) for rank in range(1, n + 1)]
     else:
-        cumulative_sum = 0
-        for rank in range(1, n + 1):
-            cumulative_sum += 1 / (n - rank + 1)
-            alphas[rank - 1] = cumulative_sum
-    return alphas
+        return np.cumsum(1 / (n - np.arange(n)))
 
 
 def compute_ln_alphas(n):
