@@ -31,7 +31,9 @@ def sele_alphas(n):
 
 
 def entropy(x):
-    return -torch.sum(torch.log(logits) * logits, dim=1) 
+    eps = 1e-9 
+    x = torch.clamp(x, min=eps, max=1 - eps).to(x.device)  
+    return -torch.sum(torch.log(x) * x, dim=1)
 
 
 def top12_margin(x):
