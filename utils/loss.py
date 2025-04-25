@@ -31,7 +31,6 @@ def sele_alphas(n):
 
 
 def entropy(x):
-    logits = F.softmax(x, dim=1)
     return -torch.sum(torch.log(logits) * logits, dim=1) 
 
 
