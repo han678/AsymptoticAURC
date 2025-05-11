@@ -48,11 +48,17 @@ These figures help visualize the bias, mean squared error (MSE), and different c
 If you found this work or code useful, please cite:
 
 ```
-@article{zhou2024novel,
-  title={A Novel Characterization of the Population Area Under the Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators},
-  author={Zhou, Han and Van Landeghem, Jordy and Popordanoska, Teodora and Blaschko, Matthew B},
-  journal={arXiv preprint arXiv:2410.15361},
-  year={2024}
+@inproceedings{zhou2024novel,
+      title={A Novel Characterization of the Population Area Under the 
+Risk Coverage Curve (AURC) and Rates of Finite Sample Estimators}, 
+      author={Han Zhou and Jordy Van Landeghem and Teodora Popordanoska 
+and Matthew B. Blaschko},
+      booktitle={International Conference on Machine Learning},
+      year={2025},
+      eprint={2410.15361},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML},
+      url={https://arxiv.org/abs/2410.15361}, 
 }
 ```
 #### License
